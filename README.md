@@ -27,6 +27,25 @@ npm start
 
 Open http://127.0.0.1:5190/ for the day tour or http://127.0.0.1:5190/night/ for the night game. Run all commands from the repository root; the root build packages both modes together. Rebuild after changing source files. The completed build works without internet access. Fonts, geometry, materials and sound generation are local.
 
+### Windows PowerShell: if `npm` is blocked
+
+If PowerShell says that `npm.ps1` cannot be loaded because running scripts is disabled, use `npm.cmd` instead. It invokes the same npm commands without changing your PowerShell execution policy. From the repository root (the folder containing `package.json`), run:
+
+```powershell
+node --version # Must be 22.12 or newer.
+npm.cmd ci
+npm.cmd run build
+npm.cmd start
+```
+
+Keep that terminal open while visiting the local URLs above; press **Ctrl+C** to stop the server. If you previously set `PORT`, use that port in both URLs, or run `$env:PORT = $null` before starting to restore the default **5190**.
+
+Do not double-click the source or built HTML files to start the game. Open the HTTP URLs above instead: during the build, Vite processes the source modules and CSS, and the built pages expect server-root paths such as `/night/`, not a `file://` address.
+
+After changing source files, **stop the server, rebuild, restart it, then reload the browser**. The local server loads the completed build into memory at startup, so rebuilding alone does not update an already-running server.
+
+### Windows launcher and custom port
+
 On Windows, after the first build you can also double-click **Start-GBU-Campus.cmd**. It uses the existing Codex Node runtime when available, otherwise Node from PATH, and opens the game.
 
 **5190 is the default local port.** Both `npm start` and the Windows launcher respect the `PORT` environment variable. To choose another port, set it before starting. For example, in PowerShell:
@@ -36,7 +55,7 @@ $env:PORT = "5200"
 .\Start-GBU-Campus.cmd
 ```
 
-The launcher starts/checks the server on that port and opens http://127.0.0.1:5200/. Night mode is at http://127.0.0.1:5200/night/. You can also run `npm start` instead of the launcher after setting the same variable, then open the matching URL yourself. Use a whole-number port from 1 to 65535; if another app uses it, choose a different port. To return to the default in that PowerShell session, run `$env:PORT = $null`. This local port setting does not change the GitHub Pages URLs.
+The launcher starts/checks the server on that port and opens http://127.0.0.1:5200/. Night mode is at http://127.0.0.1:5200/night/. You can also run `npm.cmd start` in PowerShell instead of the launcher after setting the same variable, then open the matching URL yourself. Use a whole-number port from 1 to 65535; if another app uses it, choose a different port. To return to the default in that PowerShell session, run `$env:PORT = $null`. This local port setting does not change the GitHub Pages URLs.
 
 The original development checkout uses a junction to local Three.js/Vite dependencies; do not delete that node_modules junction recursively. Fresh checkouts create their own dependencies with `npm ci`.
 
